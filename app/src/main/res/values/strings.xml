@@ -9,6 +9,8 @@
 
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
+    <string name="error_happened">error_happened</string>
+    <string name="saved">saved</string>
 
     <string-array name="photo_resolutions">
         <item>highest</item>

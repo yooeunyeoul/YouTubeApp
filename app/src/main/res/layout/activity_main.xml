@@ -43,10 +43,6 @@
 
     </LinearLayout>
 
-
-
-
-
     <com.camerakit.CameraKitView
         android:layout_below="@+id/topBtnlayout"
         android:layout_above="@id/bottomBtnLayout"
@@ -74,8 +70,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/btn190"
+        <ImageView
+            android:id="@+id/capturedImage"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

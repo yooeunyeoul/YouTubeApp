@@ -2,24 +2,33 @@ package com.example.youtubeapp
 
 import android.content.ContentResolver
 import android.content.ContentValues
+import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 import java.io.OutputStream
 
 
 class MainActivity : AppCompatActivity() {
+
+    // 1 - FILE MANAGEMENT
+    private val FILENAME = "tripBook.txt"
+    private val FOLDERNAME = "bookTrip"
 
     val sum: (Int, Int) -> Int = { x, y -> x + y }
 
     val repeatFun: String.(Int) -> String = { times -> this.repeat(times) }
 
     val twoParameters: (String, Int) -> String = repeatFun
+
+    var randomCount :Int get() = (0..9).random()
+        set(value) {}
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,8 +37,33 @@ class MainActivity : AppCompatActivity() {
 
         btn1.setOnClickListener {
             camera.captureImage { cameraKitView, bytes ->
-                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                insertImage(contentResolver,bitmap,""+System.currentTimeMillis(), "")
+//                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+//                insertImage(contentResolver,bitmap,""+System.currentTimeMillis(), "")
+//                Log.e("TAG", filesDir.toString())
+//                createOrGetFile(File(filesDir.toString()), "sampleFile", "sampleDirectory").mkdir()
+//                val dd = StorageUtils.readFile(this, File("${filesDir}/sampleDirectory"))
+
+//                val file = File(filesDir, "sampleFile")
+//                File.createTempFile("sampleFile",null, cacheDir)
+//
+//                val cacheFile = File(cacheDir , "sampleFile")
+//                if (cacheFile.exists()) {
+//                    val ddd = "ddddd"
+//                }
+
+                val file = File(getExternalFilesDir(null), "TestFolder")
+                if (file.isDirectory()) {
+                    File(file, System.currentTimeMillis().toString()).writeBytes(bytes)
+                } else {
+                    file.mkdirs()
+                }
+
+                var count = StorageUtils.getFileCount(file.absolutePath)
+
+                Glide.with(this).load(count[randomCount]).into(capturedImage)
+
+
+
 
 
             }
@@ -43,8 +77,8 @@ class MainActivity : AppCompatActivity() {
 
         Logger.e((twoParameters("3", 2)))
 
-
     }
+
 
     fun insertImage(
         cr: ContentResolver,
@@ -89,6 +123,20 @@ class MainActivity : AppCompatActivity() {
         return stringUrl
     }
 
+    private fun createFile(mimeType: String, fileName: String) {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            // Filter to only show results that can be "opened", such as
+            // a file (as opposed to a list of contacts or timezones).
+            addCategory(Intent.CATEGORY_OPENABLE)
+
+            // Create a file with the requested MIME type.
+            type = mimeType
+            putExtra(Intent.EXTRA_TITLE, fileName)
+        }
+
+        startActivityForResult(intent, Companion.WRITE_REQUEST_CODE)
+    }
+
     override fun onStart() {
         super.onStart()
         camera.onStart()
@@ -117,92 +165,22 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         camera.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-}
 
+    fun createOrGetFile(destination: File, fileName: String, folderName: String): File {
+        val folder = File(destination, folderName)
+        // file path = /storage/emulated/0/Android/data/bookTrip/tripBook.txt
+        return File(folder, fileName)
+    }
 
-open class Rectangle {
-    open fun draw() {
-
+    companion object {
+        private const val WRITE_REQUEST_CODE: Int = 43
     }
 }
 
-interface Polygon {
-    fun draw() {
-
-    }
-}
-
-abstract class Square() : Rectangle() {
-    abstract override fun draw()
-}
-
-var counter = 0
-    set(value) {
-        if (value >= 0) field = value
-    }
-
-fun interface KRunnable {
-    fun invoke()
-}
-
-fun interface Inpredicate {
-    fun accept(i: Int): Boolean
-}
 
 
-val isEvent = object : Inpredicate {
-    override fun accept(i: Int): Boolean {
-        return i % 2 == 0
-    }
-}
-
-fun main(){
-    mutableListOf<Int>(3, 4).swap(0, 1)
-}
-
-fun MutableList<Int>.swap(index1: Int, index2: Int) {
-    val tmp = this[index1]
-    this[index1] = this[index2]
-    this[index2] = tmp
-}
 
 
-open class Shape{
-    var houser = 1
-}
-
-class Recationgle: Shape()
-
-fun Shape.getName() = "Sahpe"
-
-fun Rectangle.getName() = " Rectangle"
-
-fun Any?.toString(): String{
-    if(this == null) return "null"
-    return toString()
-}
-
-val <T> List<T>.lastIndex : Int
- get() = size-1
-
-val Shape.house: Int
-    get() = 2
-
-class Host(val hostname: String)
-
-data class User(val name: String, val age: Int)
-
-val jack = User(name = "ddd", age = 1)
-fun ddd(){
-    val olderJack = jack.copy(age = 2)
-}
-
-val ints : Array<Int> = arrayOf(1, 2, 3)
-val any = Array<Any>(3){""}
 
 
-fun double(x: Int) :Int = x*2
 
-fun <T> singleTOlList(item: T) : List<T>{
-    return listOf<T>()
-}
