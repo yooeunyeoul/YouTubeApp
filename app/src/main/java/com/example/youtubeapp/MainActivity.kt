@@ -1,14 +1,17 @@
 package com.example.youtubeapp
 
+import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
+import com.camerakit.CameraKit
 import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
@@ -37,8 +40,8 @@ class MainActivity : AppCompatActivity() {
 
         btn1.setOnClickListener {
             camera.captureImage { cameraKitView, bytes ->
-//                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-//                insertImage(contentResolver,bitmap,""+System.currentTimeMillis(), "")
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                insertImage(contentResolver,bitmap,""+System.currentTimeMillis(), "")
 //                Log.e("TAG", filesDir.toString())
 //                createOrGetFile(File(filesDir.toString()), "sampleFile", "sampleDirectory").mkdir()
 //                val dd = StorageUtils.readFile(this, File("${filesDir}/sampleDirectory"))
@@ -51,22 +54,26 @@ class MainActivity : AppCompatActivity() {
 //                    val ddd = "ddddd"
 //                }
 
-                val file = File(getExternalFilesDir(null), "TestFolder")
-                if (file.isDirectory()) {
-                    File(file, System.currentTimeMillis().toString()).writeBytes(bytes)
-                } else {
-                    file.mkdirs()
-                }
+//                val file = File(getExternalFilesDir(null), "TestFolder")
+//                if (file.isDirectory()) {
+//                    File(file, System.currentTimeMillis().toString()).writeBytes(bytes)
+//                } else {
+//                    file.mkdirs()
+//                }
 
-                var count = StorageUtils.getFileCount(file.absolutePath)
+//                var count = StorageUtils.getFileCount(file.absolutePath)
 
-                Glide.with(this).load(count[randomCount]).into(capturedImage)
+//                Glide.with(this).load(count[randomCount]).into(capturedImage)
 
 
 
 
 
             }
+        }
+
+        flashBtn.setOnClickListener {
+            camera.flash = CameraKit.FLASH_AUTO
         }
 
 
@@ -174,6 +181,26 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val WRITE_REQUEST_CODE: Int = 43
+    }
+
+    fun getAllShownImagesPath(activity: Activity): MutableList<Uri> {
+        val uriExternal: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        val cursor: Cursor?
+        val columnIndexID: Int
+        val listOfAllImages: MutableList<Uri> = mutableListOf()
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        var imageId: Long
+        cursor = activity.contentResolver.query(uriExternal, projection, null, null, null)
+        if (cursor != null) {
+            columnIndexID = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            while (cursor.moveToNext()) {
+                imageId = cursor.getLong(columnIndexID)
+                val uriImage = Uri.withAppendedPath(uriExternal, "" + imageId)
+                listOfAllImages.add(uriImage)
+            }
+            cursor.close()
+        }
+        return listOfAllImages
     }
 }
 
