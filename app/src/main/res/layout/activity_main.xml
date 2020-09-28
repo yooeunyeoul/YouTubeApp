@@ -6,49 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/topBtnlayout"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn3"
-            android:text="촬영"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/btn5"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            />
-
-        <Button
-            android:id="@+id/btn6"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            />
-
-        <Button
-            android:id="@+id/btn7"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            />
-
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/flashBtn"
+        android:text="flash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <com.camerakit.CameraKitView
-        android:layout_below="@+id/topBtnlayout"
-        android:layout_above="@id/bottomBtnLayout"
         android:id="@+id/camera"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:keepScreenOn="true"
         app:camera_facing="back"
@@ -56,42 +23,15 @@
         app:camera_focus="continuous"
         app:camera_permissions="camera" />
 
-    <LinearLayout
-        android:id="@+id/bottomBtnLayout"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+
+
+    <Button
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:id="@+id/btn1"
+        android:text="촬영"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/btn1"
-            android:text="촬영"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:id="@+id/capturedImage"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            />
-
-        <Button
-            android:id="@+id/btn8"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            />
-
-        <Button
-            android:id="@+id/btn9"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            />
-
-
-    </LinearLayout>
 
 </RelativeLayout>
